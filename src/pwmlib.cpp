@@ -43,6 +43,17 @@ void PWMPort::set_enabled(bool enable) {
     ofs.close();
 }
 
+bool PWMPort::get_enabled() {
+    std::ifstream ifs(channel_path / "enable");
+    if (!ifs.is_open())
+        throw std::runtime_error(fmt::format("Cannot open {}. Likely insufficient permissions", (channel_path / "enable").string()));
+    int32_t enabled;
+    ifs >> enabled;
+    ifs.close();
+    return enabled != 0;
+}
+
+
 void PWMPort::set_polarity() {
     std::ofstream ofs(channel_path / "polarity");
     ofs.exceptions(std::ofstream::failbit | std::ofstream::badbit);
@@ -161,7 +172,10 @@ PWMPort::PWMPort(std::string_view pwm_device, int16_t channel_num, int32_t perio
 
     duty_cycle_path = channel_path / "duty_cycle";
 
-    set_enabled(false);
+    if (get_enabled()) {
+        set_enabled(false);
+    }
+
     set_period(period);
 
     if (std::filesystem::exists(channel_path / "polarity"))
