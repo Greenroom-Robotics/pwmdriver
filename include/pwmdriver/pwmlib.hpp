@@ -15,6 +15,7 @@ public:
     void set_trim(float trim) { duty_trim = trim; }
     int32_t get_period();
     std::string get_polarity();
+    bool get_enabled();
     void deactivate();
     void configure_ppm(int32_t min_point, int32_t zero_point, int32_t max_point);
     void configure_pwm();
