@@ -33,6 +33,7 @@ jobs:
           echo "distros=$(jq -cn '$ARGS.positional' --args "${distros[@]}")" >> $GITHUB_OUTPUT
 
   release:
+    needs: setup
     strategy:
       fail-fast: true
       matrix:
